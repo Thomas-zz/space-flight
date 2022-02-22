@@ -1,5 +1,7 @@
 <template>
-  <section id="human" class="bg-blue-200 relative h-full">3</section>
+  <section id="human" class="relative h-full text-center text-6xl text-white leading-loose">
+    3
+  </section>
 </template>
 
 <script lang="ts">

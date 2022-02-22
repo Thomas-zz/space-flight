@@ -29,7 +29,7 @@ aside {
   top: 50%;
   transform: translateY(-50%);
   right: 5%;
-  z-index: 3;
+  z-index: 4;
 
   li {
     height: 6rem;

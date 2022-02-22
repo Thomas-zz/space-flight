@@ -1,5 +1,5 @@
 <template>
-  <section id="stars" class="stars-page relative h-full">
+  <section id="stars" @mousemove="mouseMove()" class="stars-page relative h-full">
     <div class="left-list">
       <div ref="LeftArrow" class="left-arrow" @click="toLeft()"></div>
       <ul class="starsli">
@@ -8,14 +8,34 @@
           :ref="(el) => (starsLi[index] = el)"
           v-bind:key="item"
           @click="clickLi(index)"
+          @mouseenter="mouseEnter(index)"
+          @mouseleave="mouseLeave()"
         >
           <p>{{ item }}</p>
         </li>
       </ul>
-      <!-- <img :src="imgurl" class="starsImg" ref="starsImg" /> -->
+      <img :src="imgUrl" class="starsImg" ref="starsImg" />
     </div>
     <stars-show-vue class="right-list" ref="StarsShow"></stars-show-vue>
-    <div ref="earth" class="earth-video bg-red-400 h-1/4 top-1/3"></div>
+    <div id="moon"></div>
+    <!-- <img
+      src="https://qcmkmk.file.qingfuwucdn.com/file/be1d034d2582101e_1645169699305.png"
+      class="bgImg"
+      ref="bgImg1"
+    /> -->
+    <!-- <img
+      src="https://qcmkmk.file.qingfuwucdn.com/file/be1d034d2582101e_1645169699305.png"
+      class="bgImg2"
+      ref="bgImg2"
+    /> -->
+    <video
+      ref="earth"
+      class="earth-video"
+      src="https://qcmkmk.file.qingfuwucdn.com/file/3bf9261692d52ad9_1645519552164.mp4"
+      autoplay
+      loop
+      muted
+    ></video>
   </section>
 </template>
 
@@ -27,18 +47,36 @@ type LeftArrowType = Ref<Element | any>
 type StarsShowType = Ref<Element | any>
 type StarsLiType = Ref<HTMLLIElement[] | any[]>
 type EarthType = Ref<Element | any>
+type StarsImgType = Ref<Element | any>
+type ImgListType = {
+  imgurl: string
+}[]
 
-function clickLiFn(
+function bgImgShowFn(
   starsList: string[],
   StarsShow: StarsShowType,
   starsLi: StarsLiType,
   LeftArrow: LeftArrowType,
   earth: EarthType
 ) {
-  return (index: number) => {
-    console.log(StarsShow.value)
+  // 设置鼠标离开li的时候要不要清除图片url
+  const ifUrl = ref(true)
+  const current = ref(0)
+  const lock = ref(true)
+  const imgList: ImgListType = reactive([
+    { imgurl: `https://qcmkmk.file.qingfuwucdn.com/file/c2b7843f71e897e5_1645284026751.png` },
+    { imgurl: `https://qcmkmk.file.qingfuwucdn.com/file/107f8fe22bd4b68f_1645284031912.png` },
+    { imgurl: `https://qcmkmk.file.qingfuwucdn.com/file/05ebfc8f5f2d987e_1645284035935.png` },
+    { imgurl: `https://qcmkmk.file.qingfuwucdn.com/file/335f902554bee002_1645284040341.png` },
+    { imgurl: `https://qcmkmk.file.qingfuwucdn.com/file/5e228f828329d615_1645284054726.png` },
+    { imgurl: `https://qcmkmk.file.qingfuwucdn.com/file/9632d79836bbd68a_1645284061755.png` },
+  ])
+  const imgUrl = ref('')
+  const starsImg: StarsImgType = ref(null)
 
-    let ifUrl = ref(true)
+  function clickLi(index: number) {
+    // console.log(StarsShow.value)
+
     // this.mouseEnter(this.current)
     // 不清除图片url
     ifUrl.value = false
@@ -59,16 +97,63 @@ function clickLiFn(
       StarsShow.value.enterAnimation()
     }, 1200)
   }
-}
+  function mouseLeave() {
+    if (ifUrl.value) {
+      current.value = 0
+      imgUrl.value = ''
+    }
+  }
+  function mouseEnter(index: number) {
+    current.value = index
+    lock.value = true
+    // console.log('当前列：' + this.current)
+    imgUrl.value = imgList[index].imgurl
+  }
+  function mouseMove() {
+    let timeout: any = ref(null)
+    const mouseX = ref(0)
+    const mouseY = ref(0)
+    if (!lock.value) return null
+    clearTimeout(timeout)
+    const e: MouseEvent | undefined = window.event as MouseEvent
+    const width = starsImg.value.clientWidth / 2
+    const height = starsImg.value.clientHeight / 2
+    const newMouseX = e.clientX
+    const newMouseY = e.clientY
 
-function toLeftFn(
-  starsList: string[],
-  LeftArrow: LeftArrowType,
-  StarsShow: StarsShowType,
-  starsLi: StarsLiType,
-  earth: EarthType
-) {
-  return () => {
+    starsImg.value.style.left = (e.clientX - width) / 16 + 'rem'
+    starsImg.value.style.top = (e.clientY - height) / 26 + 'rem'
+
+    // // 移动背景图
+    // if (mouseX < this.mouseX) {
+    //   bgImg1.style.left = bgImg1.getBoundingClientRect().left + 1 + 'px'
+    //   bgImg2.style.left = bgImg2.getBoundingClientRect().left + 0.5 + 'px'
+    // } else if (mouseX > this.mouseX) {
+    //   bgImg1.style.left = bgImg1.getBoundingClientRect().left - 1 + 'px'
+    //   bgImg2.style.left = bgImg2.getBoundingClientRect().left - 0.5 + 'px'
+    // }
+
+    // if (mouseY < this.mouseY) {
+    //   bgImg1.style.top = bgImg1.getBoundingClientRect().top + 1 + 'px'
+    //   bgImg2.style.top = bgImg2.getBoundingClientRect().top + 0.5 + 'px'
+    // } else if (mouseY > this.mouseY) {
+    //   bgImg1.style.top = bgImg1.getBoundingClientRect().top - 1 + 'px'
+    //   bgImg2.style.top = bgImg2.getBoundingClientRect().top - 0.5 + 'px'
+    // }
+
+    // 重设mouseX和mouseY
+    mouseX.value = newMouseX
+    mouseY.value = newMouseY
+
+    // 关锁
+    lock.value = false
+    // 50毫秒后打开
+    timeout.value = setTimeout(function () {
+      lock.value = true
+    }, 50)
+  }
+  function toLeft() {
+    ifUrl.value = true
     // 箭头淡出
     LeftArrow.value.style.opacity = 0
     StarsShow.value.enterAnimation()
@@ -81,6 +166,7 @@ function toLeftFn(
       }, 1100 + 100 * i)
     }
   }
+  return { clickLi, mouseLeave, mouseMove, mouseEnter, toLeft, imgUrl, starsImg }
 }
 
 function earthMove(val: boolean, earth: EarthType) {
@@ -90,6 +176,7 @@ function earthMove(val: boolean, earth: EarthType) {
     earth.value.style.right = 0
   }
 }
+
 export default defineComponent({
   components: { starsShowVue },
   setup(props, content) {
@@ -113,16 +200,37 @@ export default defineComponent({
         }, 200 * i)
       }
     }
-    const clickLi = clickLiFn(starsList, StarsShow, starsLi, LeftArrow, earth)
-    const toLeft = toLeftFn(starsList, LeftArrow, StarsShow, starsLi, earth)
-    return { starsList, starsLi, LeftArrow, StarsShow, earth, pageIn, clickLi, toLeft }
+
+    const { clickLi, mouseLeave, mouseMove, mouseEnter, toLeft, imgUrl, starsImg } = bgImgShowFn(
+      starsList,
+      StarsShow,
+      starsLi,
+      LeftArrow,
+      earth
+    )
+    return {
+      starsList,
+      starsLi,
+      LeftArrow,
+      StarsShow,
+      earth,
+      imgUrl,
+      starsImg,
+      pageIn,
+      clickLi,
+      toLeft,
+      mouseEnter,
+      mouseMove,
+      mouseLeave,
+    }
   },
 })
 </script>
+
 <style lang="scss" scoped>
 .stars-page {
   position: relative;
-  background: rgba(2, 2, 2, 1);
+  // background: rgba(2, 2, 2, 1);
   overflow: hidden;
   // background: url('~assets/星空.png');
   .left-list {
@@ -130,7 +238,7 @@ export default defineComponent({
     top: 50%;
     transform: translateY(-50%);
     left: 0;
-    z-index: 2;
+    z-index: 3;
     .left-arrow {
       width: 2rem;
       height: 2rem;
@@ -235,6 +343,8 @@ export default defineComponent({
   .earth-video {
     z-index: 0;
     width: 65%;
+    top: 50%;
+    transform: translateY(-50%);
     position: absolute;
     right: 2%;
     transition: 0.8s ease;

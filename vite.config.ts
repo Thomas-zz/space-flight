@@ -21,6 +21,15 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'),
     },
   },
+  server: {
+    proxy: {
+      '/reception': {
+        target: 'https://qcmkmk.api.cloudendpoint.cn',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/reception/, ''),
+      },
+    },
+  },
   css: {
     preprocessorOptions: {
       scss: {

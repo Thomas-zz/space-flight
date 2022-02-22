@@ -1,5 +1,5 @@
 <template>
-  <section id="home" class="bg-red-200 relative h-full overflow-hidden">
+  <section id="home" class="relative h-full overflow-hidden">
     <div class="banner"></div>
     <div class="overlay">
       <div class="corner-marker">

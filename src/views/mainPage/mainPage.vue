@@ -1,6 +1,15 @@
 <template>
   <Aside />
-  <main id="mainPage" class="h-screen overflow-y-scroll" @wheel.prevent="throttleHandleScroll">
+  <main
+    id="mainPage"
+    class="h-screen overflow-y-scroll"
+    style="background: rgba(2, 2, 2, 1)"
+    @wheel.prevent="throttleHandleScroll"
+  >
+    <img
+      class="mainBgImg h-full"
+      src="https://qcmkmk.file.qingfuwucdn.com/file/be1d034d2582101e_1645169699305.png"
+    />
     <Home />
     <StarsPage ref="starsPage" />
     <Human />
@@ -9,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, onMounted, ref, Ref } from 'vue'
 import useStore from '@/store/index'
 import Home from '@/views/home/Home.vue'
 import Human from '@/views/human/human.vue'
@@ -18,23 +27,14 @@ import StarsPage from '@/views/starsPage/starsPage.vue'
 import Aside from '@/components/aside.vue'
 import throttle from '@/effect/commonEffect'
 
+type starsPageType = Ref<Element | null>
+
 // 鼠标滚轮改变地址栏，切换页面
-function handleScrollEvent() {
+function handleScrollEvent(firstInto: Ref<boolean>, starsPage: starsPageType) {
   const pageInfo = useStore().pageInfo
   const hrefArr: string[] = []
   for (const item of pageInfo) {
     hrefArr.push(item.href)
-  }
-  const starsPage = ref(null)
-  // 标志“星辰”页面是否是第一次被切换到
-  let firstInto = true
-
-  // starsPage的入场动画
-  function starsAnimate() {
-    if (firstInto) {
-      ;(starsPage as any).value.pageIn()
-      firstInto = false
-    }
   }
 
   // 鼠标滚轮事件，修改url地址实现滚动
@@ -49,23 +49,28 @@ function handleScrollEvent() {
       index = hrefArr.indexOf(hash)
       url = window.location.href.split(hash)[0]
     }
-
     if (e.deltaY > 0) {
       if (index + 1 < hrefArr.length) {
         window.location.href = url + hrefArr[index + 1]
-        starsAnimate()
       }
     } else if (e.deltaY < 0) {
       if (index - 1 >= 0) {
         window.location.href = url + hrefArr[index - 1]
-        starsAnimate()
       }
     }
   }
 
   // 为函数添加节流
   const throttleHandleScroll = throttle(handleScroll, 500)
-  return { throttleHandleScroll, starsPage }
+  return { throttleHandleScroll }
+}
+
+// starsPage的入场动画
+function starsAnimate(firstInto: Ref<boolean>, starsPage: starsPageType) {
+  if (firstInto.value) {
+    ;(starsPage as any).value.pageIn()
+    firstInto.value = false
+  }
 }
 
 export default defineComponent({
@@ -74,8 +79,27 @@ export default defineComponent({
   //   let dom = document.querySelector('#human')
   //   console.log(dom)
   // }
+
   setup() {
-    const { throttleHandleScroll, starsPage } = handleScrollEvent()
+    // 标志“星辰”页面是否是第一次被切换到
+    const firstInto = ref(true)
+    const starsPage = ref(null)
+
+    const hash = window.location.hash
+    window.location.hash = ''
+
+    window.addEventListener('hashchange', () => {
+      if (firstInto.value && location.hash === '#stars') {
+        starsAnimate(firstInto, starsPage)
+      }
+    })
+
+    onMounted(() => {
+      if (!!hash) {
+        window.location.hash = hash
+      }
+    })
+    const { throttleHandleScroll } = handleScrollEvent(firstInto, starsPage)
     return { throttleHandleScroll, starsPage }
   },
 })
@@ -87,5 +111,12 @@ main {
 }
 main::-webkit-scrollbar {
   display: none;
+}
+
+.mainBgImg {
+  position: absolute;
+  width: 120%;
+  z-index: 0;
+  opacity: 0.8;
 }
 </style>
