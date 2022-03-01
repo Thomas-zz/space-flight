@@ -3,7 +3,7 @@
     <div class="banner"></div>
     <div class="overlay">
       <div class="corner-marker">
-        <!-- <img class="logo" src="~assets/CNSA.png" /> -->
+        <img class="logo relative -top-4" src="@/assets/CNSA.png" />
         <div class="text">
           <p class="cnsa">C N S A</p>
           <p>中国航天</p>
@@ -35,9 +35,8 @@ export default defineComponent({
   .corner-marker {
     .logo {
       display: inline-block;
-      width: 2.5rem;
+      width: 3rem;
       padding-right: 1rem;
-      padding-top: 0.2rem;
     }
     .text {
       display: inline-block;

@@ -16,6 +16,9 @@ export default defineConfig({
       ext: '.gz',
     }),
   ],
+  build: {
+    sourcemap: true,
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),

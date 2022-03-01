@@ -14,15 +14,12 @@
           <p>{{ item }}</p>
         </li>
       </ul>
+      <!-- <div class="starsImg" ref="starsImg"></div> -->
       <img :src="imgUrl" class="starsImg" ref="starsImg" />
     </div>
     <stars-show-vue class="right-list" ref="StarsShow"></stars-show-vue>
     <div id="moon"></div>
-    <!-- <img
-      src="https://qcmkmk.file.qingfuwucdn.com/file/be1d034d2582101e_1645169699305.png"
-      class="bgImg"
-      ref="bgImg1"
-    /> -->
+    <img src="../../assets/星空.png" class="bgImg" ref="bgImg1" />
     <!-- <img
       src="https://qcmkmk.file.qingfuwucdn.com/file/be1d034d2582101e_1645169699305.png"
       class="bgImg2"
@@ -63,14 +60,22 @@ function bgImgShowFn(
   const ifUrl = ref(true)
   const current = ref(0)
   const lock = ref(true)
-  const imgList: ImgListType = reactive([
-    { imgurl: `https://qcmkmk.file.qingfuwucdn.com/file/c2b7843f71e897e5_1645284026751.png` },
-    { imgurl: `https://qcmkmk.file.qingfuwucdn.com/file/107f8fe22bd4b68f_1645284031912.png` },
-    { imgurl: `https://qcmkmk.file.qingfuwucdn.com/file/05ebfc8f5f2d987e_1645284035935.png` },
-    { imgurl: `https://qcmkmk.file.qingfuwucdn.com/file/335f902554bee002_1645284040341.png` },
-    { imgurl: `https://qcmkmk.file.qingfuwucdn.com/file/5e228f828329d615_1645284054726.png` },
-    { imgurl: `https://qcmkmk.file.qingfuwucdn.com/file/9632d79836bbd68a_1645284061755.png` },
-  ])
+  // const imgList: ImgListType = reactive([
+  //   { imgurl: `https://qcmkmk.file.qingfuwucdn.com/file/c2b7843f71e897e5_1645284026751.png` },
+  //   { imgurl: `https://qcmkmk.file.qingfuwucdn.com/file/107f8fe22bd4b68f_1645284031912.png` },
+  //   { imgurl: `https://qcmkmk.file.qingfuwucdn.com/file/05ebfc8f5f2d987e_1645284035935.png` },
+  //   { imgurl: `https://qcmkmk.file.qingfuwucdn.com/file/335f902554bee002_1645284040341.png` },
+  //   { imgurl: `https://qcmkmk.file.qingfuwucdn.com/file/5e228f828329d615_1645284054726.png` },
+  //   { imgurl: `https://qcmkmk.file.qingfuwucdn.com/file/9632d79836bbd68a_1645284061755.png` },
+  // ])
+  const imgList: ImgListType = [
+    { imgurl: `../../src/assets/stars/北斗.png` },
+    { imgurl: `../../src/assets/stars/嫦娥.png` },
+    { imgurl: `../../src/assets/stars/墨子.png` },
+    { imgurl: `../../src/assets/stars/神舟飞船.png` },
+    { imgurl: `../../src/assets/stars/天宫.png` },
+    { imgurl: `../../src/assets/stars/天问.png` },
+  ]
   const imgUrl = ref('')
   const starsImg: StarsImgType = ref(null)
 
@@ -93,6 +98,7 @@ function bgImgShowFn(
     }, 400)
     // 设置starsShow的值
     StarsShow.value.setValue(index)
+    console.log(new Date())
     setTimeout(function () {
       StarsShow.value.enterAnimation()
     }, 1200)

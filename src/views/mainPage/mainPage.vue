@@ -6,10 +6,7 @@
     style="background: rgba(2, 2, 2, 1)"
     @wheel.prevent="throttleHandleScroll"
   >
-    <img
-      class="mainBgImg h-full"
-      src="https://qcmkmk.file.qingfuwucdn.com/file/be1d034d2582101e_1645169699305.png"
-    />
+    <img class="mainBgImg h-full" src="../../assets/星空.png" />
     <Home />
     <StarsPage ref="starsPage" />
     <Human />
