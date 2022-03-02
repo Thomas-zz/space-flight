@@ -14,8 +14,8 @@
           <p>{{ item }}</p>
         </li>
       </ul>
-      <!-- <div class="starsImg" ref="starsImg"></div> -->
-      <img :src="imgUrl" class="starsImg" ref="starsImg" />
+      <div class="starsImg" ref="starsImg"></div>
+      <!-- <img :src="imgUrl" class="starsImg" ref="starsImg" /> -->
     </div>
     <stars-show-vue class="right-list" ref="StarsShow"></stars-show-vue>
     <div id="moon"></div>
@@ -106,14 +106,16 @@ function bgImgShowFn(
   function mouseLeave() {
     if (ifUrl.value) {
       current.value = 0
-      imgUrl.value = ''
+      // imgUrl.value = ''
+      starsImg.value.style.backgroundImage = ''
     }
   }
   function mouseEnter(index: number) {
     current.value = index
     lock.value = true
     // console.log('当前列：' + this.current)
-    imgUrl.value = imgList[index].imgurl
+    // imgUrl.value = imgList[index].imgurl
+    starsImg.value.style.backgroundImage = `url(${imgList[index].imgurl})`
   }
   function mouseMove() {
     let timeout: any = ref(null)
@@ -302,9 +304,13 @@ export default defineComponent({
     }
     .starsImg {
       position: absolute;
-      width: 23rem;
+      width: 20rem;
+      background-size: 20rem auto;
+      background-repeat: no-repeat;
+      height: 18rem;
       opacity: 0.5;
       transition: 0.1s linear;
+      will-change: auto;
     }
   }
   .right-list {
